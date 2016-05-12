@@ -1,5 +1,5 @@
 
-# glbt - glBitmapText
+# glbt - glBitmapText ![Supports OpenGL 3.3](https://img.shields.io/badge/OpenGL-3.3-blue.svg)
 
 [glBitmapText][glBitmapText] is a simple cross-platform header-only text rendering
 library for OpenGL. [glBitmapText][glBitmapText] requires no additional files
