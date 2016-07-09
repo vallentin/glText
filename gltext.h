@@ -5,7 +5,7 @@
 // License: https://github.com/MrVallentin/glText/blob/master/LICENSE
 //
 // Date Created: September 24, 2013
-// Last Modified: July 08, 2016
+// Last Modified: July 09, 2016
 
 // Copyright (c) 2013-2016 Christian Vallentin <mail@vallentinsource.com>
 //
@@ -60,7 +60,7 @@ extern "C" {
 
 #define GLT_VERSION_MAJOR 1
 #define GLT_VERSION_MINOR 0
-#define GLT_VERSION_PATCH 0
+#define GLT_VERSION_PATCH 1
 
 #define GLT_VERSION GLT_STRINGIFY_VERSION(GLT_VERSION_MAJOR, GLT_VERSION_MINOR, GLT_VERSION_PATCH)
 
@@ -448,6 +448,9 @@ GLT_API GLboolean gltIsCharacterDrawable(const char c)
 
 GLT_API GLint gltCountSupportedCharacters(const char *str)
 {
+	if (!str)
+		return 0;
+
 	GLint count = 0;
 
 	while ((*str) != '\0')
@@ -466,6 +469,9 @@ GLT_API GLint gltCountSupportedCharacters(const char *str)
 
 GLT_API GLint gltCountDrawableCharacters(const char *str)
 {
+	if (!str)
+		return 0;
+
 	GLint count = 0;
 
 	while ((*str) != '\0')
@@ -490,9 +496,6 @@ GLT_API void _gltUpdateBuffers(GLTText *text)
 	if (!text->_dirty)
 		return;
 
-	if (!text->_text || !text->_textLength)
-		return;
-
 
 	if (text->_vertices)
 	{
@@ -500,6 +503,12 @@ GLT_API void _gltUpdateBuffers(GLTText *text)
 
 		free(text->_vertices);
 		text->_vertices = GLT_NULL;
+	}
+
+	if (!text->_text || !text->_textLength)
+	{
+		text->_dirty = GL_FALSE;
+		return;
 	}
 
 
