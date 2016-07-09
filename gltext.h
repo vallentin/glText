@@ -48,7 +48,7 @@ extern "C" {
 
 
 #include <stdlib.h> /* malloc(), calloc(), free() */
-#include <stdint.h> /* uint8_t, uint64_t */
+#include <stdint.h> /* uint8_t, uint16_t, uint32_t, uint64_t */
 
 
 #if (defined(_DEBUG) || defined(DEBUG)) && !defined(GLT_DEBUG)
@@ -77,7 +77,7 @@ extern "C" {
 
 #define GLT_VERSION_MAJOR 1
 #define GLT_VERSION_MINOR 1
-#define GLT_VERSION_PATCH 0
+#define GLT_VERSION_PATCH 1
 
 #define GLT_VERSION GLT_STRINGIFY_VERSION(GLT_VERSION_MAJOR, GLT_VERSION_MINOR, GLT_VERSION_PATCH)
 
@@ -153,10 +153,10 @@ GLT_API GLint gltCountDrawableCharacters(const char *str);
 
 
 static const char *_gltFontGlyphCharacters = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`*#=[]\"";
-static const int _gltFontGlyphCount = 83;
+#define _gltFontGlyphCount 83
 
-static const char _gltFontGlyphMinChar = ' ';
-static const char _gltFontGlyphMaxChar = 'z';
+#define _gltFontGlyphMinChar ' '
+#define _gltFontGlyphMaxChar 'z'
 
 static const int _gltFontGlyphHeight = 17; // Line height
 
@@ -187,7 +187,7 @@ typedef struct _GLTglyphdata {
 
 static _GLTglyph _gltFontGlyphs[_gltFontGlyphCount];
 
-static const int _gltFontGlyphLength = _gltFontGlyphMaxChar - _gltFontGlyphMinChar;
+#define _gltFontGlyphLength (_gltFontGlyphMaxChar - _gltFontGlyphMinChar)
 static _GLTglyph _gltFontGlyphs2[_gltFontGlyphLength];
 
 
@@ -914,8 +914,7 @@ static const uint64_t _gltFontGlyphRects[_gltFontGlyphCount] = {
 #define _GLT_FONT_GLYPH_DATA_TYPE uint64_t
 #define _GLT_FONT_PIXEL_SIZE_BITS 2
 
-
-static const int _gltFontGlyphDataCount = 387;
+#define _gltFontGlyphDataCount 387
 
 static const _GLT_FONT_GLYPH_DATA_TYPE _gltFontGlyphData[_gltFontGlyphDataCount] = {
 	0x551695416A901554, 0x569695A5A56AA55A, 0x555554155545AA9, 0x916AA41569005A40, 0xA5A569695A5A5696, 0x51555556AA569695, 0x696916A941554155, 0x69155A55569555A5,
