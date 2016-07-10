@@ -5,7 +5,7 @@
 // License: https://github.com/MrVallentin/glText/blob/master/LICENSE
 //
 // Date Created: September 24, 2013
-// Last Modified: July 09, 2016
+// Last Modified: July 10, 2016
 
 // Copyright (c) 2013-2016 Christian Vallentin <mail@vallentinsource.com>
 //
@@ -48,6 +48,7 @@ extern "C" {
 
 
 #include <stdlib.h> /* malloc(), calloc(), free() */
+#include <string.h> /* memset(), memcpy(), strlen() */
 #include <stdint.h> /* uint8_t, uint16_t, uint32_t, uint64_t */
 
 
@@ -77,7 +78,7 @@ extern "C" {
 
 #define GLT_VERSION_MAJOR 1
 #define GLT_VERSION_MINOR 1
-#define GLT_VERSION_PATCH 1
+#define GLT_VERSION_PATCH 2
 
 #define GLT_VERSION GLT_STRINGIFY_VERSION(GLT_VERSION_MAJOR, GLT_VERSION_MINOR, GLT_VERSION_PATCH)
 
@@ -114,7 +115,7 @@ GLT_API void gltDeleteText(GLTtext *text);
 
 
 GLT_API GLboolean gltSetText(GLTtext *text, const char *string);
-GLT_API const char* gltGetText(GLTtext *text, const char *string);
+GLT_API const char* gltGetText(GLTtext *text);
 
 
 GLT_API void gltViewport(GLsizei width, GLsizei height);
@@ -187,7 +188,7 @@ typedef struct _GLTglyphdata {
 
 static _GLTglyph _gltFontGlyphs[_gltFontGlyphCount];
 
-#define _gltFontGlyphLength (_gltFontGlyphMaxChar - _gltFontGlyphMinChar)
+#define _gltFontGlyphLength (_gltFontGlyphMaxChar - _gltFontGlyphMinChar + 1)
 static _GLTglyph _gltFontGlyphs2[_gltFontGlyphLength];
 
 
@@ -344,7 +345,7 @@ GLT_API GLboolean gltSetText(GLTtext *text, const char *string)
 }
 
 
-GLT_API const char* gltGetText(GLTtext *text, const char *string)
+GLT_API const char* gltGetText(GLTtext *text)
 {
 	if (text && text->_text)
 		return text->_text;
