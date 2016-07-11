@@ -5,7 +5,7 @@
 // License: https://github.com/MrVallentin/glText/blob/master/LICENSE
 //
 // Date Created: September 24, 2013
-// Last Modified: July 10, 2016
+// Last Modified: July 11, 2016
 
 // Copyright (c) 2013-2016 Christian Vallentin <mail@vallentinsource.com>
 //
@@ -78,7 +78,7 @@ extern "C" {
 
 #define GLT_VERSION_MAJOR 1
 #define GLT_VERSION_MINOR 1
-#define GLT_VERSION_PATCH 2
+#define GLT_VERSION_PATCH 3
 
 #define GLT_VERSION GLT_STRINGIFY_VERSION(GLT_VERSION_MAJOR, GLT_VERSION_MINOR, GLT_VERSION_PATCH)
 
@@ -121,8 +121,11 @@ GLT_API const char* gltGetText(GLTtext *text);
 GLT_API void gltViewport(GLsizei width, GLsizei height);
 
 
-GLT_API void gltDrawText(GLTtext *text, GLfloat x, GLfloat y, GLfloat scale);
-#define gltDrawText2D gltDrawText
+GLT_API void gltDrawText(GLTtext *text, const GLfloat mvp[16]);
+
+GLT_API void gltDrawText2D(GLTtext *text, GLfloat x, GLfloat y, GLfloat scale);
+
+GLT_API void gltDrawText3D(GLTtext *text, GLfloat x, GLfloat y, GLfloat z, GLfloat scale, GLfloat view[16], GLfloat projection[16]);
 
 
 GLT_API void gltColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
@@ -151,6 +154,9 @@ GLT_API GLint gltCountDrawableCharacters(const char *str);
 
 #define _GLT_TEXT2D_POSITION_OFFSET 0
 #define _GLT_TEXT2D_TEXCOORD_OFFSET _GLT_TEXT2D_POSITION_SIZE
+
+
+#define _GLT_MAT4_INDEX(row, column) ((row) + (column) * 4)
 
 
 static const char *_gltFontGlyphCharacters = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`*#=[]\"";
@@ -215,12 +221,14 @@ struct GLTtext {
 };
 
 
-GLT_API GLboolean _gltCreateText2DShader(void);
-GLT_API GLboolean _gltCreateText2DFontTexture(void);
-
 GLT_API void _gltGetViewportSize(GLint *width, GLint *height);
 
+GLT_API void _gltMat4Mult(const GLfloat lhs[16], const GLfloat rhs[16], GLfloat result[16]);
+
 GLT_API void _gltUpdateBuffers(GLTtext *text);
+
+GLT_API GLboolean _gltCreateText2DShader(void);
+GLT_API GLboolean _gltCreateText2DFontTexture(void);
 
 
 GLT_API GLTtext* gltCreateText(void)
@@ -367,17 +375,34 @@ GLT_API void gltViewport(GLsizei width, GLsizei height)
 	const GLfloat zFar = 1.0f;
 
 	const GLfloat projection[16] = {
-		(2.0f / (right - left)), 0.0f, 0.0f, -((right + left) / (right - left)),
-		0.0f, (2.0f / (top - bottom)), 0.0f, -((top + bottom) / (top - bottom)),
-		0.0f, 0.0f, (-2.0f / (zFar - zNear)), -((zFar + zNear) / (zFar - zNear)),
-		0.0f, 0.0f, 0.0f, 1.0f,
+		(2.0f / (right - left)), 0.0f, 0.0f, 0.0f,
+		0.0f, (2.0f / (top - bottom)), 0.0f, 0.0f,
+		0.0f, 0.0f, (-2.0f / (zFar - zNear)), 0.0f,
+
+		-((right + left) / (right - left)),
+		-((top + bottom) / (top - bottom)),
+		-((zFar + zNear) / (zFar - zNear)),
+		1.0f,
 	};
 
 	memcpy(_gltText2DProjectionMatrix, projection, 16 * sizeof(GLfloat));
 }
 
 
-GLT_API void gltDrawText(GLTtext *text, GLfloat x, GLfloat y, GLfloat scale)
+#define _gltDrawText() \
+	glUseProgram(_gltText2DShader); \
+	\
+	glActiveTexture(GL_TEXTURE0); \
+	glBindTexture(GL_TEXTURE_2D, _gltText2DFontTexture); \
+	\
+	glUniformMatrix4fv(_gltText2DShaderMVPUniformLocation, 1, GL_FALSE, mvp); \
+	\
+	glBindVertexArray(text->_vao); \
+	glDrawArrays(GL_TRIANGLES, 0, text->vertexCount); \
+	glBindVertexArray(0);
+
+
+GLT_API void gltDrawText(GLTtext *text, const GLfloat mvp[16])
 {
 	if (!text)
 		return;
@@ -388,6 +413,20 @@ GLT_API void gltDrawText(GLTtext *text, GLfloat x, GLfloat y, GLfloat scale)
 	if (!text->vertexCount)
 		return;
 
+	_gltDrawText();
+}
+
+
+GLT_API void gltDrawText2D(GLTtext *text, GLfloat x, GLfloat y, GLfloat scale)
+{
+	if (!text)
+		return;
+
+	if (text->_dirty)
+		_gltUpdateBuffers(text);
+
+	if (!text->vertexCount)
+		return;
 
 #ifndef GLT_MANUAL_VIEWPORT
 	GLint viewportWidth, viewportHeight;
@@ -395,40 +434,45 @@ GLT_API void gltDrawText(GLTtext *text, GLfloat x, GLfloat y, GLfloat scale)
 	gltViewport(viewportWidth, viewportHeight);
 #endif
 
-
 	const GLfloat model[16] = {
-		scale, 0.0f, 0.0f, x,
-		0.0f, scale, 0.0f, y,
+		scale, 0.0f, 0.0f, 0.0f,
+		0.0f, scale, 0.0f, 0.0f,
 		0.0f, 0.0f, scale, 0.0f,
-		0.0f, 0.0f, 0.0f, 1.0f,
+		x, y, 0.0f, 1.0f,
 	};
 
 	GLfloat mvp[16];
+	_gltMat4Mult(_gltText2DProjectionMatrix, model, mvp);
 
-	int i, j;
-	for (i = 0; i < 4; i++)
-	{
-		for (j = 0; j < 4; j++)
-		{
-			mvp[i + j * 4] =
-				_gltText2DProjectionMatrix[i * 4 + 0] * model[0 * 4 + j] +
-				_gltText2DProjectionMatrix[i * 4 + 1] * model[1 * 4 + j] +
-				_gltText2DProjectionMatrix[i * 4 + 2] * model[2 * 4 + j] +
-				_gltText2DProjectionMatrix[i * 4 + 3] * model[3 * 4 + j];
-		}
-	}
+	_gltDrawText();
+}
 
 
-	glUseProgram(_gltText2DShader);
+GLT_API void gltDrawText3D(GLTtext *text, GLfloat x, GLfloat y, GLfloat z, GLfloat scale, GLfloat view[16], GLfloat projection[16])
+{
+	if (!text)
+		return;
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, _gltText2DFontTexture);
+	if (text->_dirty)
+		_gltUpdateBuffers(text);
 
-	glUniformMatrix4fv(_gltText2DShaderMVPUniformLocation, 1, GL_FALSE, mvp);
+	if (!text->vertexCount)
+		return;
 
-	glBindVertexArray(text->_vao);
-	glDrawArrays(GL_TRIANGLES, 0, text->vertexCount);
-	glBindVertexArray(0);
+	const GLfloat model[16] = {
+		scale, 0.0f, 0.0f, 0.0f,
+		0.0f, -scale, 0.0f, 0.0f,
+		0.0f, 0.0f, scale, 0.0f,
+		x, y + (GLfloat)_gltFontGlyphHeight * scale, z, 1.0f,
+	};
+
+	GLfloat mvp[16];
+	GLfloat vp[16];
+
+	_gltMat4Mult(projection, view, vp);
+	_gltMat4Mult(vp, model, mvp);
+
+	_gltDrawText();
 }
 
 
@@ -524,6 +568,23 @@ GLT_API void _gltGetViewportSize(GLint *width, GLint *height)
 
 	if (width) (*width) = dimensions[2];
 	if (height) (*height) = dimensions[3];
+}
+
+
+GLT_API void _gltMat4Mult(const GLfloat lhs[16], const GLfloat rhs[16], GLfloat result[16])
+{
+	int c, r, i;
+
+	for (c = 0; c < 4; c++)
+	{
+		for (r = 0; r < 4; r++)
+		{
+			result[_GLT_MAT4_INDEX(r, c)] = 0.0f;
+
+			for (i = 0; i < 4; i++)
+				result[_GLT_MAT4_INDEX(r, c)] += lhs[_GLT_MAT4_INDEX(r, i)] * rhs[_GLT_MAT4_INDEX(i, c)];
+		}
+	}
 }
 
 
