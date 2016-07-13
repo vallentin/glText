@@ -1,10 +1,18 @@
 
 # glText [![Build Status][glTextBuildStatus]][glTextCI] ![Release][glTextVersionBadge] ![Supported OpenGL 3.3][glTextOpenGLVersionsBadge] ![License][glTextLicenseBadge]
 
+[glText][glText] is a simple cross-platform single header text rendering
+library for OpenGL. [glText][glText] requires no additional files
+(such as fonts or textures) for drawing text, everything comes pre-packed
+in the header.
+
 
 ## Example
 
 ```c
+// Initialize glText
+gltInit();
+
 // Creating text
 GLTtext *text = gltCreateText();
 gltSetText(text, "Hello World!");
@@ -15,7 +23,18 @@ gltDrawText2D(text, x, y, scale);
 
 // Deleting text
 gltDeleteText(text);
+
+// Destroy glText
+gltTerminate();
 ```
+
+
+## No Dependencies
+
+[glText][glText] has no external dependencies besides [OpenGL][OpenGL] and the standard C libraries.
+By default [glText][glText] uses `stdlib.h`, `string.h` and `stdint.h`.
+
+If `GLT_DEBUG` is defined `assert.h` is needed. If `GLT_DEBUG_PRINT` is defined `stdio.h` is needed.
 
 
 ## Reporting Bugs & Requests
