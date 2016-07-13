@@ -5,7 +5,7 @@
 // License: https://github.com/MrVallentin/glText/blob/master/LICENSE
 //
 // Date Created: September 24, 2013
-// Last Modified: July 11, 2016
+// Last Modified: July 13, 2016
 
 // Copyright (c) 2013-2016 Christian Vallentin <mail@vallentinsource.com>
 //
@@ -78,7 +78,7 @@ extern "C" {
 
 #define GLT_VERSION_MAJOR 1
 #define GLT_VERSION_MINOR 1
-#define GLT_VERSION_PATCH 3
+#define GLT_VERSION_PATCH 4
 
 #define GLT_VERSION GLT_STRINGIFY_VERSION(GLT_VERSION_MAJOR, GLT_VERSION_MINOR, GLT_VERSION_PATCH)
 
@@ -132,11 +132,20 @@ GLT_API void gltColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
 GLT_API void gltGetColor(GLfloat *r, GLfloat *g, GLfloat *b, GLfloat *a);
 
 
+GLT_API GLfloat gltGetLineHeight(GLfloat scale);
+
+GLT_API GLfloat gltGetTextWidth(const GLTtext *text, GLfloat scale);
+GLT_API GLfloat gltGetTextHeight(const GLTtext *text, GLfloat scale);
+
+
 GLT_API GLboolean gltIsCharacterSupported(const char c);
 GLT_API GLint gltCountSupportedCharacters(const char *str);
 
 GLT_API GLboolean gltIsCharacterDrawable(const char c);
 GLT_API GLint gltCountDrawableCharacters(const char *str);
+
+
+GLT_API GLint gltCountNewLines(const char *str);
 
 
 // After this point everything you'll see is all
@@ -201,8 +210,8 @@ static _GLTglyph _gltFontGlyphs2[_gltFontGlyphLength];
 static GLuint _gltText2DShader = GLT_NULL_HANDLE;
 static GLuint _gltText2DFontTexture = GLT_NULL_HANDLE;
 
-static GLint _gltText2DShaderColorUniformLocation = -1;
 static GLint _gltText2DShaderMVPUniformLocation = -1;
+static GLint _gltText2DShaderColorUniformLocation = -1;
 
 static GLfloat _gltText2DProjectionMatrix[16];
 
@@ -494,6 +503,68 @@ GLT_API void gltGetColor(GLfloat *r, GLfloat *g, GLfloat *b, GLfloat *a)
 }
 
 
+GLT_API GLfloat gltGetLineHeight(GLfloat scale)
+{
+	return (GLfloat)_gltFontGlyphHeight * scale;
+}
+
+GLT_API GLfloat gltGetTextWidth(const GLTtext *text, GLfloat scale)
+{
+	if (!text || !text->_text)
+		return 0.0f;
+
+	GLfloat maxWidth = 0.0f;
+	GLfloat width = 0.0f;
+
+	_GLTglyph glyph;
+
+	char c;
+	int i;
+	for (i = 0; i < text->_textLength; i++)
+	{
+		c = text->_text[i];
+
+		if ((c == '\n') || (c == '\r'))
+		{
+			if (width > maxWidth)
+				maxWidth = width;
+
+			width = 0.0f;
+
+			continue;
+		}
+
+		if (!gltIsCharacterSupported(c))
+		{
+#ifdef GLT_UNKNOWN_CHARACTER
+			c = GLT_UNKNOWN_CHARACTER;
+			if (!gltIsCharacterSupported(c))
+				continue;
+#else
+			continue;
+#endif
+		}
+
+		glyph = _gltFontGlyphs2[c - _gltFontGlyphMinChar];
+
+		width += (GLfloat)glyph.w;
+	}
+
+	if (width > maxWidth)
+		maxWidth = width;
+
+	return maxWidth;
+}
+
+GLT_API GLfloat gltGetTextHeight(const GLTtext *text, GLfloat scale)
+{
+	if (!text || !text->_text)
+		return 0.0f;
+
+	return (GLfloat)(gltCountNewLines(text->_text) + 1) * gltGetLineHeight(scale);
+}
+
+
 GLT_API GLboolean gltIsCharacterSupported(const char c)
 {
 	if (c == '\t') return GL_TRUE;
@@ -554,6 +625,20 @@ GLT_API GLint gltCountDrawableCharacters(const char *str)
 		if (gltIsCharacterDrawable(*str))
 			count++;
 
+		str++;
+	}
+
+	return count;
+}
+
+
+GLT_API GLint gltCountNewLines(const char *str)
+{
+	GLint count = 0;
+
+	while ((str = strchr(str, '\n')) != NULL)
+	{
+		count++;
 		str++;
 	}
 
@@ -644,9 +729,7 @@ GLT_API void _gltUpdateBuffers(GLTtext *text)
 
 	_GLTglyph glyph;
 
-
 	char c;
-
 	int i;
 	for (i = 0; i < text->_textLength; i++)
 	{
@@ -665,7 +748,6 @@ GLT_API void _gltUpdateBuffers(GLTtext *text)
 
 			continue;
 		}
-
 
 		if (!gltIsCharacterSupported(c))
 		{
