@@ -78,7 +78,7 @@ extern "C" {
 
 #define GLT_VERSION_MAJOR 1
 #define GLT_VERSION_MINOR 1
-#define GLT_VERSION_PATCH 5
+#define GLT_VERSION_PATCH 6
 
 #define GLT_VERSION GLT_STRINGIFY_VERSION(GLT_VERSION_MAJOR, GLT_VERSION_MINOR, GLT_VERSION_PATCH)
 
@@ -588,7 +588,7 @@ GLT_API GLfloat gltGetTextWidth(const GLTtext *text, GLfloat scale)
 	if (width > maxWidth)
 		maxWidth = width;
 
-	return maxWidth;
+	return maxWidth * scale;
 }
 
 GLT_API GLfloat gltGetTextHeight(const GLTtext *text, GLfloat scale)
