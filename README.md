@@ -81,7 +81,7 @@ freely, subject to the following restrictions:
 [glTextBuildStatus]: https://drone.io/github.com/MrVallentin/glText/status.png
 [glTextCI]: https://drone.io/github.com/MrVallentin/glText/latest
 
-[glTextVersionBadge]: https://img.shields.io/badge/release-v1.1.4-blue.svg
+[glTextVersionBadge]: https://img.shields.io/badge/release-v1.1.5-blue.svg
 [glTextLicenseBadge]: https://img.shields.io/badge/license-%20free%20to%20use%2C%20share%2C%20modify%20and%20redistribute-blue.svg
 
 [glTextOpenGLVersionsBadge]: https://img.shields.io/badge/OpenGL-3.3-blue.svg

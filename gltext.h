@@ -5,7 +5,7 @@
 // License: https://github.com/MrVallentin/glText/blob/master/LICENSE
 //
 // Date Created: September 24, 2013
-// Last Modified: July 13, 2016
+// Last Modified: July 17, 2016
 
 // Copyright (c) 2013-2016 Christian Vallentin <mail@vallentinsource.com>
 //
@@ -60,7 +60,7 @@ extern "C" {
 #	include <assert.h> /* assert() */
 #	define _GLT_ASSERT(expression) assert(expression)
 #else
-#	define _GLTASSERT(expression)
+#	define _GLT_ASSERT(expression)
 #endif
 
 #ifdef GLT_DEBUG_PRINT
@@ -78,7 +78,7 @@ extern "C" {
 
 #define GLT_VERSION_MAJOR 1
 #define GLT_VERSION_MINOR 1
-#define GLT_VERSION_PATCH 4
+#define GLT_VERSION_PATCH 5
 
 #define GLT_VERSION GLT_STRINGIFY_VERSION(GLT_VERSION_MAJOR, GLT_VERSION_MINOR, GLT_VERSION_PATCH)
 
@@ -97,6 +97,15 @@ extern "C" {
 #	endif
 #	define GLT_API static
 #endif
+
+
+#define GLT_LEFT 0
+#define GLT_TOP 0
+
+#define GLT_CENTER 1
+
+#define GLT_RIGHT 2
+#define GLT_BOTTOM 2
 
 
 static GLboolean gltInitialized = GL_FALSE;
@@ -124,6 +133,7 @@ GLT_API void gltViewport(GLsizei width, GLsizei height);
 GLT_API void gltDrawText(GLTtext *text, const GLfloat mvp[16]);
 
 GLT_API void gltDrawText2D(GLTtext *text, GLfloat x, GLfloat y, GLfloat scale);
+GLT_API void gltDrawText2DAligned(GLTtext *text, GLfloat x, GLfloat y, GLfloat scale, int horizontalAlignment, int verticalAlignment);
 
 GLT_API void gltDrawText3D(GLTtext *text, GLfloat x, GLfloat y, GLfloat z, GLfloat scale, GLfloat view[16], GLfloat projection[16]);
 
@@ -454,6 +464,31 @@ GLT_API void gltDrawText2D(GLTtext *text, GLfloat x, GLfloat y, GLfloat scale)
 	_gltMat4Mult(_gltText2DProjectionMatrix, model, mvp);
 
 	_gltDrawText();
+}
+
+
+GLT_API void gltDrawText2DAligned(GLTtext *text, GLfloat x, GLfloat y, GLfloat scale, int horizontalAlignment, int verticalAlignment)
+{
+	if (!text)
+		return;
+
+	if (text->_dirty)
+		_gltUpdateBuffers(text);
+
+	if (!text->vertexCount)
+		return;
+
+	if (horizontalAlignment == GLT_CENTER)
+		x -= gltGetTextWidth(text, scale) * 0.5f;
+	else if (horizontalAlignment == GLT_RIGHT)
+		x -= gltGetTextWidth(text, scale);
+
+	if (verticalAlignment == GLT_CENTER)
+		y -= gltGetTextHeight(text, scale) * 0.5f;
+	else if (verticalAlignment == GLT_RIGHT)
+		y -= gltGetTextHeight(text, scale);
+
+	gltDrawText2D(text, x, y, scale);
 }
 
 
