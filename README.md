@@ -110,8 +110,6 @@ Before submitting bugs, make sure that you're using the latest version of [glTex
 ## License
 
 ```
-glText <https://github.com/MrVallentin/glText>
-
 Copyright (c) 2013-2016 Christian Vallentin <mail@vallentinsource.com>
 
 This software is provided 'as-is', without any express or implied
