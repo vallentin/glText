@@ -301,7 +301,7 @@ GLT_API void gltDeleteText(GLTtext *text)
 		text->_vao = GLT_NULL_HANDLE;
 	}
 
-	if (text->_vao)
+	if (text->_vbo)
 	{
 		glDeleteBuffers(1, &text->_vbo);
 		text->_vbo = GLT_NULL_HANDLE;
