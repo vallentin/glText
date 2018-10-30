@@ -1,32 +1,20 @@
 
-// Author: Christian Vallentin <mail@vallentinsource.com>
-// Website: http://vallentinsource.com
 // Repository: https://github.com/MrVallentin/glText
-// License: https://github.com/MrVallentin/glText/blob/master/LICENSE
-//
-// Date Created: July 18, 2016
-// Last Modified: July 18, 2016
+// License: https://github.com/MrVallentin/glText/blob/master/LICENSE.md
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1310)
 #	pragma warning(disable: 4996) // Disable the fopen, strcpy, sprintf being unsafe warning
 #endif
-
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <math.h>
 
+#include <glad/glad.h> /* https://github.com/Dav1dde/glad */
+#include <GLFW/glfw3.h> /* https://github.com/glfw/glfw */
 
-// Get GLAD here: http://glad.dav1d.de, https://github.com/Dav1dde/glad
-#include <glad/glad.h>
-// Feel free to use GL3W, GLEW, etc. instead.
-
-// Get GLFW here: http://www.glfw.org, https://github.com/glfw/glfw
-#include <glfw/glfw3.h>
-
-// Get glText here: https://github.com/MrVallentin/glText
-#include "gltext.h"
+#include "gltext.h" /* https://github.com/MrVallentin/glText */
 
 
 int main(int argc, char *argv[])
@@ -55,7 +43,7 @@ int main(int argc, char *argv[])
 
 	if (!window)
 	{
-		printf("Failed to create window\n");
+		fprintf(stderr, "Failed to create window\n");
 		glfwTerminate();
 		return EXIT_FAILURE;
 	}
@@ -63,42 +51,32 @@ int main(int argc, char *argv[])
 	glfwShowWindow(window);
 	glfwMakeContextCurrent(window);
 
-
-	// Feel free to use GL3W, GLEW, etc. instead.
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		printf("Failed to load OpenGL functions and extensions\n");
+		fprintf(stderr, "Failed to load OpenGL functions and extensions\n");
 		glfwTerminate();
 		return EXIT_FAILURE;
 	}
-
 
 	glfwSwapInterval(1);
 
-
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
 
 	if (!gltInit())
 	{
-		printf("Failed to initialize glText\n");
+		fprintf(stderr, "Failed to initialize glText\n");
 		glfwTerminate();
 		return EXIT_FAILURE;
 	}
-
 
 	GLTtext *text1 = gltCreateText();
 	gltSetText(text1, "Hello World!");
 
 	GLTtext *text2 = gltCreateText();
 
-
 	int viewportWidth, viewportHeight;
-
 	double time;
-
 	char str[30];
-
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -106,25 +84,20 @@ int main(int argc, char *argv[])
 
 		glfwGetFramebufferSize(window, &viewportWidth, &viewportHeight);
 
-
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE))
 			glfwSetWindowShouldClose(window, GLFW_TRUE);
-
 
 		glViewport(0, 0, viewportWidth, viewportHeight);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-
 		gltColor(1.0f, 1.0f, 1.0f, 1.0f);
 		gltDrawText2D(text1, 0.0f, 0.0f, 1.0f); // x=0.0, y=0.0, scale=1.0
-
 
 		gltDrawText2DAligned(text1,
 			(GLfloat)(viewportWidth / 2),
 			(GLfloat)(viewportHeight / 2),
 			3.0f,
 			GLT_CENTER, GLT_CENTER);
-
 
 		sprintf(str, "Time: %.4f", time);
 		gltSetText(text2, str);
@@ -137,22 +110,17 @@ int main(int argc, char *argv[])
 
 		gltDrawText2DAligned(text2, 0.0f, (GLfloat)viewportHeight, 1.0f, GLT_LEFT, GLT_BOTTOM);
 
-
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-
 
 	gltDeleteText(text1);
 	gltDeleteText(text2);
 
 	gltTerminate();
 
-
 	glfwDestroyWindow(window);
-
 	glfwTerminate();
-
 
 	return EXIT_SUCCESS;
 }
