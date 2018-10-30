@@ -35,6 +35,16 @@ gltTerminate();
 ```
 
 
+## Implementation
+
+In one C or C++ file, define `GLT_IMPLEMENTATION` prior to inclusion to create the implementation.
+
+```c
+#define GLT_IMPLEMENTATION
+#include "gltext.h"
+```
+
+
 ## Optimization
 
 Each time `gltDraw*()` functions are called, `glGetIntegerv(GL_VIEWPORT, ...)`

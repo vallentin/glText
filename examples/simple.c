@@ -14,6 +14,7 @@
 #include <glad/glad.h> /* https://github.com/Dav1dde/glad */
 #include <GLFW/glfw3.h> /* https://github.com/glfw/glfw */
 
+#define GLT_IMPLEMENTATION
 #include "gltext.h" /* https://github.com/MrVallentin/glText */
 
 

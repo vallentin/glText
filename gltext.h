@@ -5,6 +5,10 @@
 // Date Created: September 24, 2013
 // Last Modified: October 30, 2018
 
+// In one C or C++ file, define GLT_IMPLEMENTATION prior to inclusion to create the implementation.
+//   #define GLT_IMPLEMENTATION
+//   #include "gltext.h"
+
 // Copyright (c) 2013-2018 Christian Vallentin
 //
 // This software is provided 'as-is', without any express or implied
@@ -138,10 +142,13 @@ GLT_API GLint gltCountDrawableCharacters(const char *str);
 
 GLT_API GLint gltCountNewLines(const char *str);
 
-// After this point everything you'll see is all
-// the internal stuff. Feel free to use any of it,
-// but be warned that everything can have changed in
-// the next update, so be careful relying on any of it.
+// After this point everything you'll see is the
+// implementation and all the internal stuff.
+// Use it at your own discretion, but be warned
+// that everything can have changed in the next
+// commit, so be careful relying on any of it.
+
+#ifdef GLT_IMPLEMENTATION
 
 #define _GLT_TEXT2D_POSITION_LOCATION 0
 #define _GLT_TEXT2D_TEXCOORD_LOCATION 1
@@ -1322,6 +1329,8 @@ GLT_API GLboolean _gltCreateText2DFontTexture(void)
 
 	return GL_TRUE;
 }
+
+#endif
 
 #ifdef __cplusplus
 }
