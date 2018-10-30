@@ -112,6 +112,9 @@ GLT_API const char* gltGetText(GLTtext *text);
 
 GLT_API void gltViewport(GLsizei width, GLsizei height);
 
+GLT_API void gltBeginDraw();
+GLT_API void gltEndDraw();
+
 GLT_API void gltDrawText(GLTtext *text, const GLfloat mvp[16]);
 
 GLT_API void gltDrawText2D(GLTtext *text, GLfloat x, GLfloat y, GLfloat scale);
@@ -367,17 +370,24 @@ GLT_API void gltViewport(GLsizei width, GLsizei height)
 	memcpy(_gltText2DProjectionMatrix, projection, 16 * sizeof(GLfloat));
 }
 
+GLT_API void gltBeginDraw()
+{
+	glUseProgram(_gltText2DShader);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, _gltText2DFontTexture);
+}
+
+GLT_API void gltEndDraw()
+{
+
+}
+
 #define _gltDrawText() \
-	glUseProgram(_gltText2DShader); \
-	\
-	glActiveTexture(GL_TEXTURE0); \
-	glBindTexture(GL_TEXTURE_2D, _gltText2DFontTexture); \
-	\
 	glUniformMatrix4fv(_gltText2DShaderMVPUniformLocation, 1, GL_FALSE, mvp); \
 	\
 	glBindVertexArray(text->_vao); \
-	glDrawArrays(GL_TRIANGLES, 0, text->vertexCount); \
-	glBindVertexArray(0);
+	glDrawArrays(GL_TRIANGLES, 0, text->vertexCount);
 
 GLT_API void gltDrawText(GLTtext *text, const GLfloat mvp[16])
 {
@@ -476,7 +486,6 @@ GLT_API void gltDrawText3D(GLTtext *text, GLfloat x, GLfloat y, GLfloat z, GLflo
 
 GLT_API void gltColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 {
-	glUseProgram(_gltText2DShader);
 	glUniform4f(_gltText2DShaderColorUniformLocation, r, g, b, a);
 }
 

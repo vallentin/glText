@@ -17,9 +17,15 @@ gltInit();
 GLTtext *text = gltCreateText();
 gltSetText(text, "Hello World!");
 
-// Drawing text
+// Begin text drawing (this for instance calls glUseProgram)
+gltBeginDraw();
+
+// Draw any amount of text between begin and end
 gltColor(1.0f, 1.0f, 1.0f, 1.0f);
 gltDrawText2D(text, x, y, scale);
+
+// Finish drawing text
+gltEndDraw();
 
 // Deleting text
 gltDeleteText(text);

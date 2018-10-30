@@ -90,6 +90,8 @@ int main(int argc, char *argv[])
 		glViewport(0, 0, viewportWidth, viewportHeight);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		gltBeginDraw();
+
 		gltColor(1.0f, 1.0f, 1.0f, 1.0f);
 		gltDrawText2D(text1, 0.0f, 0.0f, 1.0f); // x=0.0, y=0.0, scale=1.0
 
@@ -109,6 +111,8 @@ int main(int argc, char *argv[])
 			1.0f);
 
 		gltDrawText2DAligned(text2, 0.0f, (GLfloat)viewportHeight, 1.0f, GLT_LEFT, GLT_BOTTOM);
+
+		gltEndDraw();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
