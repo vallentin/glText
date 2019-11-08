@@ -1,4 +1,5 @@
 
+Copyright (c) 2018-2019 Robert Pancoast
 Copyright (c) 2013-2018 Christian Vallentin
 
 This software is provided 'as-is', without any express or implied
