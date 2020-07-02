@@ -65,7 +65,7 @@ gltViewport(width, height)
 
 ## Manual Model, View, Projection Matrix
 
-The example uses [LinearAlgebra](https://github.com/MrVallentin/LinearAlgebra).
+The example uses [LinearAlgebra](https://github.com/vallentin/LinearAlgebra).
 
 ```c
 GLfloat fontScale = 0.01f;
@@ -123,18 +123,18 @@ for reporting bugs, submitting patches or requesting features.
 Before submitting bugs, make sure that you're using the latest version of [glText][glText].
 
 
-[glText]: https://github.com/MrVallentin/glText
+[glText]: https://github.com/vallentin/glText
 
-[glTextReleases]: https://github.com/MrVallentin/glText/releases
+[glTextReleases]: https://github.com/vallentin/glText/releases
 
-[glTextBuildStatus]: https://drone.io/github.com/MrVallentin/glText/status.png
-[glTextCI]: https://drone.io/github.com/MrVallentin/glText/latest
+[glTextBuildStatus]: https://drone.io/github.com/vallentin/glText/status.png
+[glTextCI]: https://drone.io/github.com/vallentin/glText/latest
 
 [glTextVersionBadge]: https://img.shields.io/badge/release-v1.1.6-blue.svg
 [glTextLicenseBadge]: https://img.shields.io/badge/license-%20free%20to%20use%2C%20share%2C%20modify%20and%20redistribute-blue.svg
 
 [glTextOpenGLVersionsBadge]: https://img.shields.io/badge/OpenGL-3.3-blue.svg
 
-[glTextIssues]: https://github.com/MrVallentin/glText/issues
+[glTextIssues]: https://github.com/vallentin/glText/issues
 
 [OpenGL]: https://en.wikipedia.org/wiki/OpenGL

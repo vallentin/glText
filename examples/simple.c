@@ -1,6 +1,6 @@
 
-// Repository: https://github.com/MrVallentin/glText
-// License: https://github.com/MrVallentin/glText/blob/master/LICENSE.md
+// Repository: https://github.com/vallentin/glText
+// License: https://github.com/vallentin/glText/blob/master/LICENSE.md
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1310)
 #	pragma warning(disable: 4996) // Disable the fopen, strcpy, sprintf being unsafe warning
@@ -15,7 +15,7 @@
 #include <GLFW/glfw3.h> /* https://github.com/glfw/glfw */
 
 #define GLT_IMPLEMENTATION
-#include "gltext.h" /* https://github.com/MrVallentin/glText */
+#include "gltext.h" /* https://github.com/vallentin/glText */
 
 
 int main(int argc, char *argv[])

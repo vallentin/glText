@@ -1,9 +1,9 @@
 
-// Repository: https://github.com/MrVallentin/glText
-// License: https://github.com/MrVallentin/glText/blob/master/LICENSE.md
+// Repository: https://github.com/vallentin/glText
+// License: https://github.com/vallentin/glText/blob/master/LICENSE.md
 //
 // Date Created: September 24, 2013
-// Last Modified: October 30, 2018
+// Last Modified: July 02, 2020
 
 // In one C or C++ file, define GLT_IMPLEMENTATION prior to inclusion to create the implementation.
 //   #define GLT_IMPLEMENTATION
