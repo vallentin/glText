@@ -1,11 +1,21 @@
 
-# glText [![Build Status][glTextBuildStatus]][glTextCI] ![Release][glTextVersionBadge] ![Supported OpenGL 3.3][glTextOpenGLVersionsBadge] ![License][glTextLicenseBadge]
+# glText
+
+[![Build Status][glTextBuildStatus]][glTextCI]
+![Release][glTextVersionBadge]
+![Supported OpenGL 3.3][glTextOpenGLVersionsBadge]
+![License][glTextLicenseBadge]
 
 [glText][glText] is a simple cross-platform single header text rendering
 library for OpenGL. [glText][glText] requires no additional files
 (such as fonts or textures) for drawing text, everything comes pre-packed
 in the header.
 
+<p align="center">
+  <img width="479" height="168" src="examples/simple.png" alt="simple example" />
+</p>
+
+*The above screenshot is of the [simple.c](examples/simple.c) example.*
 
 ## Example
 
