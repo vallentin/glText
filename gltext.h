@@ -387,7 +387,9 @@ GLT_API void gltBeginDraw()
 
 GLT_API void gltEndDraw()
 {
-	glUseProgram(0);
+	#ifdef GLT_LEGACY
+		glUseProgram(0);
+	#endif
 }
 
 #define _gltDrawText() \
