@@ -53,7 +53,11 @@ In one C or C++ file, define `GLT_IMPLEMENTATION` prior to inclusion to create t
 #define GLT_IMPLEMENTATION
 #include "gltext.h"
 ```
+If using a fixed function pipeline, define `GLT_LEGACY` once in your project.
 
+```c
+#define GLT_LEGACY
+```
 
 ## Optimization
 
