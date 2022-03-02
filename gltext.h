@@ -1197,7 +1197,7 @@ GLT_API GLboolean _gltCreateText2DFontTexture(void)
 	char c0 = '0';
 	char c1 = '0';
 
-	GLuint r, g, b, a;
+	GLuint r = 0, g = 0, b = 0, a = 0;
 
 	GLfloat u1, v1;
 	GLfloat u2, v2;
