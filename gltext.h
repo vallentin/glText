@@ -89,7 +89,7 @@ extern "C" {
 #	ifndef GLT_STATIC
 #		define GLT_STATIC
 #	endif
-#	define GLT_API static
+#	define GLT_API inline static
 #endif
 
 #define GLT_LEFT 0
