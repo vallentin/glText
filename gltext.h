@@ -116,8 +116,8 @@ GLT_API const char* gltGetText(GLTtext *text);
 
 GLT_API void gltViewport(GLsizei width, GLsizei height);
 
-GLT_API void gltBeginDraw();
-GLT_API void gltEndDraw();
+GLT_API void gltBeginDraw(void);
+GLT_API void gltEndDraw(void);
 
 GLT_API void gltDrawText(GLTtext *text, const GLfloat mvp[16]);
 
@@ -377,7 +377,7 @@ GLT_API void gltViewport(GLsizei width, GLsizei height)
 	memcpy(_gltText2DProjectionMatrix, projection, 16 * sizeof(GLfloat));
 }
 
-GLT_API void gltBeginDraw()
+GLT_API void gltBeginDraw(void)
 {
 	glUseProgram(_gltText2DShader);
 
@@ -385,7 +385,7 @@ GLT_API void gltBeginDraw()
 	glBindTexture(GL_TEXTURE_2D, _gltText2DFontTexture);
 }
 
-GLT_API void gltEndDraw()
+GLT_API void gltEndDraw(void)
 {
 
 }
