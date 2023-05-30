@@ -394,9 +394,6 @@ GLT_API void gltEndDraw()
     glUniformMatrix4fv(_gltText2DShaderMVPUniformLocation, 1, GL_FALSE, mvp);                                          \
                                                                                                                        \
     glBindVertexArray(text->_vao);                                                                                     \
-                                                                                                                       \
-    glBindVertexArray(text->_vao);                                                                                     \
-                                                                                                                       \
     glBindBuffer(GL_ARRAY_BUFFER, text->_vbo);                                                                         \
                                                                                                                        \
     glEnableVertexAttribArray(_GLT_TEXT2D_POSITION_LOCATION);                                                          \
