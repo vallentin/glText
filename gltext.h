@@ -390,11 +390,25 @@ GLT_API void gltEndDraw()
 
 }
 
-#define _gltDrawText() \
-	glUniformMatrix4fv(_gltText2DShaderMVPUniformLocation, 1, GL_FALSE, mvp); \
-	\
-	glBindVertexArray(text->_vao); \
-	glDrawArrays(GL_TRIANGLES, 0, text->vertexCount);
+#define _gltDrawText()                                                                                                 \
+    glUniformMatrix4fv(_gltText2DShaderMVPUniformLocation, 1, GL_FALSE, mvp);                                          \
+                                                                                                                       \
+    glBindVertexArray(text->_vao);                                                                                     \
+                                                                                                                       \
+    glBindVertexArray(text->_vao);                                                                                     \
+                                                                                                                       \
+    glBindBuffer(GL_ARRAY_BUFFER, text->_vbo);                                                                         \
+                                                                                                                       \
+    glEnableVertexAttribArray(_GLT_TEXT2D_POSITION_LOCATION);                                                          \
+    glVertexAttribPointer(_GLT_TEXT2D_POSITION_LOCATION, _GLT_TEXT2D_POSITION_SIZE, GL_FLOAT, GL_FALSE,                \
+                          (_GLT_TEXT2D_VERTEX_SIZE * sizeof(GLfloat)),                                                 \
+                          (const void*)(_GLT_TEXT2D_POSITION_OFFSET * sizeof(GLfloat)));                               \
+                                                                                                                       \
+    glEnableVertexAttribArray(_GLT_TEXT2D_TEXCOORD_LOCATION);                                                          \
+    glVertexAttribPointer(_GLT_TEXT2D_TEXCOORD_LOCATION, _GLT_TEXT2D_TEXCOORD_SIZE, GL_FLOAT, GL_FALSE,                \
+                          (_GLT_TEXT2D_VERTEX_SIZE * sizeof(GLfloat)),                                                 \
+                          (const void*)(_GLT_TEXT2D_TEXCOORD_OFFSET * sizeof(GLfloat)));                               \
+    glDrawArrays(GL_TRIANGLES, 0, text->vertexCount);
 
 GLT_API void gltDrawText(GLTtext *text, const GLfloat mvp[16])
 {
